@@ -34,8 +34,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange
                 activeTab={activeTab}
                 onTabChange={onTabChange}
             />
-            <main className="flex-1 overflow-auto">
-                <div className="max-w-7xl mx-auto p-8">
+            <main className="flex-1 overflow-auto md:ml-0">
+                <div className="max-w-7xl mx-auto p-4 pt-16 md:pt-8 md:p-8">
                     {children}
                 </div>
             </main>

@@ -10,7 +10,8 @@ import { Search } from './components/public/Search';
 import { storage } from './services/storage';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('books'); // Changed from 'dashboard' to 'books'
+  const [isReady, setIsReady] = useState(false);
 
   // Navigation State
   // view: 'list' (dashboard/books list), 'book' (single book), 'item' (reading view)
@@ -19,6 +20,7 @@ function App() {
   // Initialize Storage (Seed)
   useEffect(() => {
     storage.init();
+    setIsReady(true); // Trigger re-render after init
   }, []);
 
   // Handle Tab Switch
@@ -29,23 +31,12 @@ function App() {
 
   // Render Logic
   const renderContent = () => {
-    if (activeTab === 'dashboard') {
-      if (view.type === 'book' && view.id) {
-        return <BookView bookId={view.id} onNavigate={(type, id) => setView({ type, id })} onBack={() => setView({ type: 'list' })} />;
-      }
-      if (view.type === 'item' && view.id) {
-        return <ReadingView itemId={view.id} onBack={() => {
-          // Need to know where we came from? Ideally 'book' view of the item's book
-          const item = storage.getItem(view.id!);
-          if (item) setView({ type: 'book', id: item.bookId });
-          else setView({ type: 'list' });
-        }} onNavigate={(id) => setView({ type: 'item', id })} />;
-      }
-      return <Dashboard onNavigate={(type, id) => setView({ type, id })} />;
+    // Show loading state until storage is ready
+    if (!isReady) {
+      return <div className="flex items-center justify-center h-64 text-slate-400">Loading...</div>;
     }
 
     if (activeTab === 'books') {
-      // Similar to dashboard logic or just a list of all books
       if (view.type === 'book' && view.id) {
         return <BookView bookId={view.id} onNavigate={(type, id) => setView({ type, id })} onBack={() => setView({ type: 'list' })} />;
       }
@@ -56,8 +47,7 @@ function App() {
           else setView({ type: 'list' });
         }} onNavigate={(id) => setView({ type: 'item', id })} />;
       }
-      // Simple Book List for 'Books' tab
-      return <Dashboard onNavigate={(type, id) => setView({ type, id })} />; // Reusing Dashboard for now as it lists books per category
+      return <Dashboard key={isReady ? 'ready' : 'loading'} onNavigate={(type, id) => setView({ type, id })} />;
     }
 
     if (activeTab === 'search') {
