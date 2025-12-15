@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Toolbar } from './Toolbar';
 import { parseMarkdown } from '../../lib/markdown';
 
@@ -62,8 +62,8 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange,
                             key={m}
                             onClick={() => setMode(m)}
                             className={`px-3 py-1 rounded-full capitalize transition-colors ${mode === m
-                                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 font-medium'
-                                    : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 font-medium'
+                                : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'
                                 }`}
                         >
                             {m}
