@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { storage } from '../../services/storage';
-import type { Category, Book } from '../../types';
+import type { Category, Book, Item } from '../../types';
 import { Book as BookIcon, FolderOpen, ChevronRight } from 'lucide-react';
 
 interface DashboardProps {
@@ -10,11 +10,16 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [books, setBooks] = useState<Book[]>([]);
+    const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
         setCategories(storage.getCategories());
         setBooks(storage.getBooks());
+        setItems(storage.getItems());
     }, []);
+
+    // Helper to get item count for a book
+    const getItemCount = (bookId: string) => items.filter(i => i.bookId === bookId).length;
 
     return (
         <div className="space-y-8">
@@ -50,7 +55,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                                             <div>
                                                 <h3 className="font-semibold text-slate-700 dark:text-slate-200 group-hover:text-amber-700 dark:group-hover:text-amber-400">{book.title}</h3>
                                                 <p className="text-sm text-slate-500 dark:text-slate-400 font-arabic mb-1">{book.titleAr}</p>
-                                                <p className="text-xs text-slate-400">{book.itemCount} Items</p>
+                                                <p className="text-xs text-slate-400">{getItemCount(book.id)} Items</p>
                                             </div>
                                             <ChevronRight className="ml-auto text-slate-300 group-hover:text-amber-400 opacity-0 group-hover:opacity-100 transition-all" size={20} />
                                         </button>
